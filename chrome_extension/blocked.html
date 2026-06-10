@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>⚠️ Phishing Site Blocked . 🛡️ PhishShield</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Oxygen, Ubuntu, Cantarell, sans-serif;
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        color: white;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 600px;
+        background: white;
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        animation: slideIn 0.5s ease-out;
+      }
+
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: translateY(-30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .warning-icon {
+        font-size: 80px;
+        text-align: center;
+        margin-bottom: 20px;
+        animation: pulse 2s ease-in-out infinite;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.1);
+        }
+      }
+
+      h1 {
+        color: #dc2626;
+        font-size: 32px;
+        text-align: center;
+        margin-bottom: 15px;
+        font-weight: 700;
+      }
+
+      .subtitle {
+        color: #6b7280;
+        text-align: center;
+        font-size: 16px;
+        margin-bottom: 30px;
+      }
+
+      .warning-box {
+        background: #fee2e2;
+        border-left: 4px solid #dc2626;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 25px;
+      }
+
+      .warning-box h2 {
+        color: #991b1b;
+        font-size: 18px;
+        margin-bottom: 10px;
+      }
+
+      .warning-box p {
+        color: #7f1d1d;
+        font-size: 14px;
+        line-height: 1.6;
+      }
+
+      .url-box {
+        background: #f9fafb;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 25px;
+        word-break: break-all;
+      }
+
+      .url-label {
+        color: #6b7280;
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        margin-bottom: 8px;
+      }
+
+      .url-text {
+        color: #dc2626;
+        font-size: 14px;
+        font-family: "Courier New", monospace;
+      }
+
+      .probability {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+
+      .probability-label {
+        color: #6b7280;
+        font-size: 14px;
+        margin-bottom: 8px;
+      }
+
+      .probability-value {
+        font-size: 36px;
+        font-weight: 700;
+        color: #dc2626;
+      }
+
+      .info-box {
+        background: #eff6ff;
+        border-left: 4px solid #3b82f6;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 25px;
+      }
+
+      .info-box h3 {
+        color: #1e40af;
+        font-size: 16px;
+        margin-bottom: 10px;
+      }
+
+      .info-box ul {
+        color: #1e3a8a;
+        font-size: 14px;
+        margin-left: 20px;
+        line-height: 1.8;
+      }
+
+      .actions {
+        display: flex;
+        gap: 15px;
+        margin-top: 30px;
+      }
+
+      .btn {
+        flex: 1;
+        padding: 15px;
+        border: none;
+        border-radius: 10px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .btn-primary {
+        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        color: white;
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4);
+      }
+
+      .btn-secondary {
+        background: #f3f4f6;
+        color: #374151;
+      }
+
+      .btn-secondary:hover {
+        background: #e5e7eb;
+      }
+
+      .btn-danger {
+        background: #fef2f2;
+        color: #dc2626;
+        border: 2px solid #dc2626;
+      }
+
+      .btn-danger:hover {
+        background: #fee2e2;
+      }
+
+      .footer {
+        text-align: center;
+        margin-top: 30px;
+        padding-top: 20px;
+        border-top: 1px solid #e5e7eb;
+        color: #9ca3af;
+        font-size: 12px;
+      }
+
+      .hidden {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="warning-icon">🚨</div>
+      <h1>Phishing Site Blocked</h1>
+      <p class="subtitle">
+        AI-powered detection prevented you from visiting a potentially dangerous
+        site
+      </p>
+
+      <div class="warning-box">
+        <h2>⚠️ Why was this blocked?</h2>
+        <p>
+          Our hybrid machine learning model (Random Forest + XGBoost) has
+          identified this website as a potential phishing attempt with high
+          confidence. Visiting this site may compromise your personal
+          information, passwords, or financial data.
+        </p>
+      </div>
+
+      <div class="url-box">
+        <div class="url-label">Blocked URL</div>
+        <div class="url-text" id="blockedUrl">Loading...</div>
+      </div>
+
+      <div class="probability">
+        <div class="probability-label">Phishing Probability</div>
+        <div class="probability-value">High!</div>
+        <div class="probability-value" id="probability" style="display: none">
+          ---%
+        </div>
+      </div>
+
+      <div class="info-box">
+        <h3>🛡️ What should you do?</h3>
+        <ul>
+          <li>Do NOT proceed to this website</li>
+          <li>Do NOT enter any personal information</li>
+          <li>
+            Check the URL carefully for misspellings or suspicious patterns
+          </li>
+          <li>
+            If you were expecting a legitimate site, verify the correct URL
+          </li>
+          <li>Report suspicious sites to appropriate authorities</li>
+        </ul>
+      </div>
+
+      <div class="actions">
+        <button class="btn btn-primary" id="goBack">← Go Back to Safety</button>
+        <button class="btn btn-secondary" id="goHome">🏠 Go to Homepage</button>
+      </div>
+
+      <div class="actions" style="margin-top: 15px; display: none">
+        <button class="btn btn-danger" id="proceedAnyway">
+          ⚠️ I Understand the Risks - Proceed Anyway
+        </button>
+      </div>
+
+      <div class="footer">Protected by 🛡️ PhishShield</div>
+    </div>
+
+    <script src="blocked.js"></script>
+  </body>
+</html>

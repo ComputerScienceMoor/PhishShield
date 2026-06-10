@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🛡️ PhishShield</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        width: 400px;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Oxygen, Ubuntu, Cantarell, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: #333;
+      }
+
+      .container {
+        background: white;
+        margin: 0;
+      }
+
+      .header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 20px;
+        text-align: center;
+      }
+
+      .header h1 {
+        font-size: 20px;
+        font-weight: 600;
+        margin-bottom: 5px;
+      }
+
+      .header p {
+        font-size: 12px;
+        opacity: 0.9;
+      }
+
+      .status-card {
+        margin: 20px;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+      }
+
+      .status-safe {
+        background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+        border: 2px solid #10b981;
+      }
+
+      .status-phishing {
+        background: linear-gradient(135deg, #ef444415 0%, #dc262615 100%);
+        border: 2px solid #ef4444;
+      }
+
+      .status-unknown {
+        background: linear-gradient(135deg, #f59e0b15 0%, #d9770615 100%);
+        border: 2px solid #f59e0b;
+      }
+
+      .status-icon {
+        font-size: 48px;
+        text-align: center;
+        margin-bottom: 15px;
+      }
+
+      .status-text {
+        font-size: 18px;
+        font-weight: 600;
+        text-align: center;
+        margin-bottom: 10px;
+      }
+
+      .status-safe .status-text {
+        color: #10b981;
+      }
+
+      .status-phishing .status-text {
+        color: #ef4444;
+      }
+
+      .status-unknown .status-text {
+        color: #f59e0b;
+      }
+
+      .url-display {
+        background: #f9fafb;
+        padding: 12px;
+        border-radius: 8px;
+        margin: 15px 20px;
+        font-size: 12px;
+        word-break: break-all;
+        color: #6b7280;
+        max-height: 60px;
+        overflow-y: auto;
+      }
+
+      .metrics {
+        margin: 20px;
+        display: none;
+      }
+
+      .metric-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px;
+        margin-bottom: 8px;
+        background: #f9fafb;
+        border-radius: 8px;
+        transition: all 0.2s ease;
+      }
+
+      .metric-row:hover {
+        background: #f3f4f6;
+        transform: translateX(2px);
+      }
+
+      .metric-label {
+        font-size: 13px;
+        color: #6b7280;
+        font-weight: 500;
+      }
+
+      .metric-value {
+        font-size: 14px;
+        font-weight: 600;
+        padding: 4px 12px;
+        border-radius: 6px;
+        background: white;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+      }
+
+      .prob-bar {
+        height: 8px;
+        background: #e5e7eb;
+        border-radius: 4px;
+        overflow: hidden;
+        margin-top: 6px;
+      }
+
+      .prob-fill {
+        height: 100%;
+        border-radius: 4px;
+        transition: width 0.3s ease, background 0.3s ease;
+      }
+
+      .prob-safe {
+        background: linear-gradient(90deg, #10b981, #059669);
+      }
+
+      .prob-warning {
+        background: linear-gradient(90deg, #f59e0b, #d97706);
+      }
+
+      .prob-danger {
+        background: linear-gradient(90deg, #ef4444, #dc2626);
+      }
+
+      .features-section {
+        margin: 20px;
+        padding: 15px;
+        background: #f9fafb;
+        border-radius: 8px;
+      }
+
+      .features-title {
+        font-size: 14px;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 12px;
+      }
+
+      .feature-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 0;
+        border-bottom: 1px solid #e5e7eb;
+        font-size: 12px;
+      }
+
+      .feature-item:last-child {
+        border-bottom: none;
+      }
+
+      .feature-name {
+        color: #6b7280;
+      }
+
+      .feature-value {
+        font-weight: 600;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 11px;
+      }
+
+      .feature-suspicious {
+        background: #fee2e2;
+        color: #dc2626;
+      }
+
+      .feature-neutral {
+        background: #fef3c7;
+        color: #d97706;
+      }
+
+      .feature-safe {
+        background: #d1fae5;
+        color: #059669;
+      }
+
+      .analyze-btn {
+        width: calc(100% - 40px);
+        margin: 0 20px 20px;
+        padding: 12px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .analyze-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+      }
+
+      .analyze-btn:active {
+        transform: translateY(0);
+      }
+
+      .loading {
+        text-align: center;
+        padding: 40px 20px;
+        color: #6b7280;
+      }
+
+      .spinner {
+        border: 3px solid #f3f4f6;
+        border-top: 3px solid #667eea;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 15px;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      .footer {
+        text-align: center;
+        padding: 15px;
+        font-size: 11px;
+        color: #9ca3af;
+        border-top: 1px solid #e5e7eb;
+      }
+
+      .scrollable {
+        max-height: 500px;
+        overflow-y: auto;
+      }
+
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: #667eea;
+        border-radius: 3px;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: #764ba2;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>🛡️ PhishShield</h1>
+        <p>Powered by AI/ML</p>
+      </div>
+
+      <div id="content" class="scrollable">
+        <div class="loading">
+          <div class="spinner"></div>
+          <p>Analyzing current page...</p>
+        </div>
+      </div>
+    </div>
+
+    <script src="popup.js"></script>
+  </body>
+</html>
