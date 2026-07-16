@@ -62,7 +62,13 @@ function hasSuspiciousHomograph(hostname) {
  */
 function extractURLFeatures(urlString) {
   try {
-    let url = urlString.trim();
+    let url = new URL(urlString.trim());
+
+    if (url.hostname.startsWith("www.")) {
+      url.hostname = url.hostname.substring(4);
+    }
+
+    url = url.href;
 
     if (!url.match(/^https?:\/\//i)) url = "http://" + url;
 
@@ -77,13 +83,13 @@ function extractURLFeatures(urlString) {
     const noOfSubDomain = (domain.match(/\./g) || []).length - 1;
     const isDomainIP = /^\d{1,3}(\.\d{1,3}){3}$/.test(domain) ? 1 : 0;
     const isHTTPS = url.toLowerCase().startsWith("https://") ? 1 : 0;
-  
+
     const noOfDigits = (url.match(/\d/g) || []).length;
     const noOfOtherSpecial = (url.match(/[^a-zA-Z0-9.:/?=&\-_]/g) || []).length;
     const noOfEquals = (url.match(/=/g) || []).length;
     const noOfQMark = (url.match(/\?/g) || []).length;
     const noOfAmpersand = (url.match(/&/g) || []).length;
-  
+
     const specialRatio = urlLength > 0 ? noOfOtherSpecial / urlLength : 0;
     const letterRatio =
       urlLength > 0 ? (url.match(/[a-zA-Z]/g) || []).length / urlLength : 0;
@@ -134,7 +140,7 @@ function extractURLFeatures(urlString) {
       "ga",
       "tk",
     ];
-    
+
     const tldSuspicious = suspiciousTLDs.includes(tld);
 
     // Suspicious keywords in domain / path / query
@@ -167,10 +173,10 @@ function extractURLFeatures(urlString) {
 
     // Boost phishing probability if either trigger is present
     if (tldSuspicious || keywordMatch) {
-      features[0] = 100000; 
-      features[3] = 1
-      features[4] = 0; 
-      features[14] = 50
+      features[0] = 100000;
+      features[3] = 1;
+      features[4] = 0;
+      features[14] = 50;
     }
 
     const isPuny = isPunycodeDomain(domain);
@@ -178,16 +184,16 @@ function extractURLFeatures(urlString) {
 
     if (isPuny || isHomograph) {
       // Boost phishing signals in existing features
-      features[0] = 100000; 
+      features[0] = 100000;
       features[3] = 1; // treat as suspicious IP-like
       features[4] = 0; // force prefix-suffix suspicious
     }
 
     if (Shortining_Service(parsed) === 1) {
-      features[0] = 100000; 
-      features[3] = 1; 
-      features[4] = 0; 
-      features[14] = 50
+      features[0] = 100000;
+      features[3] = 1;
+      features[4] = 0;
+      features[14] = 50;
     }
 
     return features;
@@ -197,8 +203,6 @@ function extractURLFeatures(urlString) {
     return new Array(15).fill(0);
   }
 }
-
-
 
 /**
  * Feature 3: Shortining_Service

@@ -13,7 +13,7 @@ let xgbSession = null;
 let isModelLoaded = false;
 
 // Detection threshold
-const PHISHING_THRESHOLD = 0.1;
+const PHISHING_THRESHOLD = 0.49;
 
 /**
  * Load ONNX models on startup
@@ -50,17 +50,27 @@ async function loadModels() {
  * @param {string} url - URL to analyze
  * @returns {Object} Prediction results
  */
- async function predictPhishing(url) {
+async function predictPhishing(url) {
   if (!isModelLoaded || !rfSession || !xgbSession) {
     console.warn("Models not loaded yet");
-    return { isPhishing: false, rfProb: 0, xgbProb: 0, hybridProb: 0, features: [] };
+    return {
+      isPhishing: false,
+      rfProb: 0,
+      xgbProb: 0,
+      hybridProb: 0,
+      features: [],
+    };
   }
 
   try {
     const features = extractURLFeatures(url);
     console.log("Extracted features for", url, ":", features);
 
-    const inputTensor = new ort.Tensor("float32", new Float32Array(features), [1, 15]);
+    const inputTensor = new ort.Tensor(
+      "float32",
+      new Float32Array(features),
+      [1, 15]
+    );
 
     const rfInputName = rfSession.inputNames[0];
     const xgbInputName = xgbSession.inputNames[0];
@@ -77,7 +87,7 @@ async function loadModels() {
 
     // === RF Model - Safe extraction ===
     if (rfOutputs.probabilities && rfOutputs.probabilities.data) {
-      rfLegitProb = rfOutputs.probabilities.data[1] || 0.5;   // index 1 = Legitimate
+      rfLegitProb = rfOutputs.probabilities.data[1] || 0.5; // index 1 = Legitimate
     } else if (rfOutputs[0] && rfOutputs[0].data) {
       rfLegitProb = rfOutputs[0].data[1] || 0.5;
     }
@@ -89,13 +99,25 @@ async function loadModels() {
       xgbLegitProb = xgbOutputs[0].data[1] || 0.5;
     }
 
+    let ensembleLegitProb;
+
     // Soft voting - probability of being Legitimate
-    const ensembleLegitProb = (rfLegitProb + 1.2 * xgbLegitProb) / (1 + 1.2);
+    if (xgbLegitProb === 0.5) {
+      ensembleLegitProb = rfLegitProb.toFixed(4) * 10;
+    } else {
+      ensembleLegitProb = (rfLegitProb + 1.2 * xgbLegitProb) / (1 + 1.2);
+    }
 
     // Adjusted threshold to reduce false positives on legitimate sites
     const isPhishing = ensembleLegitProb < PHISHING_THRESHOLD;
 
-    console.log(`RF Legit: ${rfLegitProb.toFixed(4)} | XGB Legit: ${xgbLegitProb.toFixed(4)} | Ensemble Legit: ${ensembleLegitProb.toFixed(4)} → ${isPhishing ? 'PHISHING' : 'LEGITIMATE'}`);
+    console.log(
+      `RF Legit: ${rfLegitProb.toFixed(4)} | XGB Legit: ${xgbLegitProb.toFixed(
+        4
+      )} | Ensemble Legit: ${ensembleLegitProb.toFixed(4)} → ${
+        isPhishing ? "PHISHING" : "LEGITIMATE"
+      }`
+    );
 
     return {
       isPhishing,
@@ -104,10 +126,15 @@ async function loadModels() {
       hybridProb: ensembleLegitProb,
       features,
     };
-
   } catch (error) {
     console.error("Error during prediction:", error);
-    return { isPhishing: false, rfProb: 0, xgbProb: 0, hybridProb: 0, features: [] };
+    return {
+      isPhishing: false,
+      rfProb: 0,
+      xgbProb: 0,
+      hybridProb: 0,
+      features: [],
+    };
   }
 }
 
