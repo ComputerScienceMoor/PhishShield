@@ -5,6 +5,7 @@ import (
 	"html/template"
 	"io"
 	"log"
+	"math"
 	"net"
 	"net/http"
 	"net/url"
@@ -411,11 +412,40 @@ func showBlockedPage(
 	)
 }
 
+// Calculate Shannon Entropy of the characters in the URL string.
+func calculateEntropy(url string) float64 {
+	if len(url) == 0 {
+		return 0
+	}
+
+	// Count frequency of each character
+	freqMap := make(map[rune]int)
+	for _, char := range url {
+		freqMap[char]++
+	}
+
+	// Calculate entropy
+	var entropy float64
+	length := float64(len(url))
+
+	for _, count := range freqMap {
+		p := float64(count) / length // probability
+		entropy -= p * math.Log2(p)
+	}
+
+	// Round to 4 decimal places
+	return math.Round(entropy*10000) / 10000
+}
+
 // ============================================================
 // ENSEMBLE PREDICTION
 // ============================================================
 
 func predictURL(rawURL string) bool {
+
+	if calculateEntropy(rawURL) >= 3.8 {
+		return true
+	}
 
 	features32 := ExtractUrlFeatures(rawURL)
 

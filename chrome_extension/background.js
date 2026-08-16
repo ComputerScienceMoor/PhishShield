@@ -45,6 +45,30 @@ async function loadModels() {
   }
 }
 
+// Calculate Shannon Entropy of the characters in the URL string.
+function calculateEntropy(url) {
+  const domain = new URL(url).hostname;
+
+  if (!domain || domain.length === 0) return 0;
+
+  // Count frequency of each character
+  const freqMap = {};
+  for (let char of domain) {
+      freqMap[char] = (freqMap[char] || 0) + 1;
+  }
+
+  // Calculate entropy
+  let entropy = 0;
+  const len = domain.length;
+
+  for (let char in freqMap) {
+      let p = freqMap[char] / len; // probability
+      entropy -= p * Math.log2(p);
+  }
+
+  return parseFloat(entropy.toFixed(4)); // 4 decimal places
+}
+
 /**
  * Run inference on both models and return hybrid prediction
  * @param {string} url - URL to analyze
@@ -55,6 +79,17 @@ async function predictPhishing(url) {
     console.warn("Models not loaded yet");
     return {
       isPhishing: false,
+      rfProb: 0,
+      xgbProb: 0,
+      hybridProb: 0,
+      features: [],
+    };
+  }
+
+  if (calculateEntropy(url) >= 3.8) {
+    console.warn("Entropy high, phishing!");
+    return {
+      isPhishing: true,
       rfProb: 0,
       xgbProb: 0,
       hybridProb: 0,
