@@ -139,6 +139,7 @@ function extractURLFeatures(urlString) {
       "ml",
       "ga",
       "tk",
+      "cc",
     ];
 
     const tldSuspicious = suspiciousTLDs.includes(tld);
@@ -172,11 +173,8 @@ function extractURLFeatures(urlString) {
     );
 
     // Boost phishing probability if either trigger is present
-    if (tldSuspicious || keywordMatch) {
-      features[0] = 100000;
-      features[3] = 1;
-      features[4] = 0;
-      features[14] = 50;
+    if (tldSuspicious || keywordMatch || !isHTTPS) {
+      return new Array(15).fill(1);
     }
 
     const isPuny = isPunycodeDomain(domain);
